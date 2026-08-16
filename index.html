@@ -1,0 +1,994 @@
+<meta charset="utf-8">
+<title>Renu Weds Madhav</title>
+<style>
+/* ─────────────────────────  TOKENS  ───────────────────────── */
+:root{
+  --ground:#FFF3F6;
+  --ground-2:#FCE4EB;
+  --surface:#FFFAFB;
+  --surface-2:#FDEEF2;
+  --ink:#3E0F23;
+  --ink-soft:#6E3348;
+  --ink-faint:#9C6A7C;
+  --rose:#C4557A;
+  --rose-deep:#A32950;
+  --rose-pale:#F3BFCE;
+  --gold:#BE9A4E;
+  --gold-bright:#E0BE79;
+  --line:#EBC7D2;
+  --petal-a:#F6C3D1;
+  --petal-b:#E896AE;
+  --petal-c:#D9A85E;
+  --petal-d:#FBE0E7;
+  --shadow:rgba(120,26,60,.13);
+  --glow:rgba(196,85,122,.28);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#1E0812; --ground-2:#2A0C19;
+    --surface:#2B0E1B; --surface-2:#361322;
+    --ink:#FCE6EC; --ink-soft:#E3B9C6; --ink-faint:#B78698;
+    --rose:#E8899F; --rose-deep:#F0A6B8; --rose-pale:#7A3049;
+    --gold:#DCB868; --gold-bright:#F0D89C; --line:#542033;
+    --petal-a:#C4557A; --petal-b:#E8899F; --petal-c:#DCB868; --petal-d:#7A3049;
+    --shadow:rgba(0,0,0,.5); --glow:rgba(232,137,159,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#1E0812; --ground-2:#2A0C19;
+  --surface:#2B0E1B; --surface-2:#361322;
+  --ink:#FCE6EC; --ink-soft:#E3B9C6; --ink-faint:#B78698;
+  --rose:#E8899F; --rose-deep:#F0A6B8; --rose-pale:#7A3049;
+  --gold:#DCB868; --gold-bright:#F0D89C; --line:#542033;
+  --petal-a:#C4557A; --petal-b:#E8899F; --petal-c:#DCB868; --petal-d:#7A3049;
+  --shadow:rgba(0,0,0,.5); --glow:rgba(232,137,159,.3);
+}
+
+:root{
+  --display:"Bodoni 72","Didot","Playfair Display",Georgia,"Times New Roman",serif;
+  --body:"Cochin","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --label:"Avenir Next","Futura","Gill Sans",-apple-system,system-ui,sans-serif;
+  --dev:"Kohinoor Devanagari","Devanagari Sangam MN","Noto Sans Devanagari",var(--body);
+  --col:min(100vw - 28px, 460px);
+}
+
+/* ─────────────────────────  BASE  ───────────────────────── */
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--body);font-size:16px;line-height:1.62;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 60% at 50% 0%, var(--ground-2) 0%, transparent 62%),
+    radial-gradient(90% 50% at 50% 100%, var(--ground-2) 0%, transparent 60%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:
+    repeating-linear-gradient(45deg, var(--line) 0 1px, transparent 1px 22px),
+    repeating-linear-gradient(-45deg, var(--line) 0 1px, transparent 1px 22px);
+  mask-image:radial-gradient(120% 90% at 50% 40%, #000 0%, transparent 78%);
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 40%, #000 0%, transparent 78%);
+}
+#petals{position:fixed;inset:0;z-index:60;pointer-events:none}
+.wrap{position:relative;z-index:2;width:var(--col);margin:0 auto;overflow-wrap:break-word}
+a,button{-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+
+/* ─────────────────────────  TYPE  ───────────────────────── */
+h1,h2,h3{margin:0;font-family:var(--display);font-weight:400;text-wrap:balance;letter-spacing:.005em}
+p{margin:0}
+.label{font-family:var(--label);font-size:10.5px;font-weight:600;
+  letter-spacing:.34em;text-transform:uppercase;color:var(--rose)}
+.dev{font-family:var(--dev)}
+
+/* ─────────────────────────  ORNAMENTS  ───────────────────────── */
+.arch-frame{position:relative;padding:102px 22px 44px}
+.arch-frame > svg.arch{position:absolute;inset:0;width:100%;height:100%;
+  overflow:visible;pointer-events:none}
+.arch path.outline{fill:var(--surface);stroke:var(--gold);stroke-width:1.15;
+  stroke-linejoin:round;filter:drop-shadow(0 10px 26px var(--shadow))}
+.arch path.inline-trace{fill:none;stroke:var(--rose);stroke-width:.75;opacity:.55}
+/* dash offset is driven by scroll position, not a timed transition —
+   except the hero arch, which is already on screen at load and draws on a timer */
+.arch .drawn{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+.hero .arch .drawn{transition:stroke-dashoffset 2.1s cubic-bezier(.22,.9,.25,1)}
+.hero.on .arch .drawn{stroke-dashoffset:0}
+.arch-inner{position:relative;z-index:1;text-align:center}
+
+.pillars{position:fixed;inset:0;z-index:1;pointer-events:none}
+.pillars .rail{position:absolute;top:0;bottom:0;width:34px;opacity:.5}
+.pillars .rail.l{right:calc(50% + var(--col)/2 - 2px)}
+.pillars .rail.r{left:calc(50% + var(--col)/2 - 2px)}
+.pillars svg{width:100%;height:100%}
+@media (max-width:520px){.pillars{display:none}}
+
+.torana{display:block;width:100%;height:70px;overflow:visible}
+.torana .strand{animation:sway 6.5s ease-in-out infinite}
+.torana .strand:nth-child(2n){animation-duration:8s;animation-delay:-1.4s}
+.torana .strand:nth-child(3n){animation-duration:7.2s;animation-delay:-2.7s}
+@keyframes sway{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
+
+.divider{display:flex;align-items:center;gap:12px;justify-content:center;padding:26px 0}
+.divider .rule{height:1px;flex:1;max-width:74px;background:linear-gradient(90deg,transparent,var(--gold))}
+.divider .rule:last-child{background:linear-gradient(90deg,var(--gold),transparent)}
+.divider svg{width:26px;height:26px;color:var(--rose)}
+
+/* ─────────────────────────  REVEAL  ───────────────────────── */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.85,.3,1)}
+.on .rv{opacity:1;transform:none}
+.rv.d1{transition-delay:.1s}.rv.d2{transition-delay:.2s}.rv.d3{transition-delay:.3s}
+.rv.d4{transition-delay:.4s}.rv.d5{transition-delay:.5s}.rv.d6{transition-delay:.6s}
+.rv.d7{transition-delay:.7s}.rv.d8{transition-delay:.8s}
+
+/* ─────────────────────────  HERO  ───────────────────────── */
+.hero{padding-top:104px;text-align:center}
+.invoke{display:flex;align-items:center;justify-content:center;gap:9px}
+.invoke .gan{width:38px;height:38px;color:var(--rose);flex:none}
+.invoke .gan.flip{transform:scaleX(-1)}
+.shlok{font-family:var(--dev);font-size:11.5px;line-height:1.85;color:var(--rose-deep)}
+.shlok .top{display:block;font-size:13px;margin-bottom:2px}
+
+.bless{margin-top:22px;font-family:var(--display);font-style:italic;
+  font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.parents{margin-top:11px;font-family:var(--display);
+  font-size:clamp(18px,5.3vw,21px);line-height:1.35;color:var(--rose)}
+.solicit{margin-top:13px;font-size:13px;line-height:1.6;color:var(--ink-soft);
+  max-width:300px;margin-inline:auto}
+
+.names{margin-top:24px}
+.names .n{display:block;font-family:var(--display);
+  font-size:clamp(42px,15vw,62px);line-height:.98;color:var(--ink)}
+.names .weds{display:block;font-family:var(--display);font-style:italic;
+  font-size:clamp(20px,6vw,26px);color:var(--gold);margin:4px 0}
+.sibling{margin-top:14px;font-size:13px;color:var(--ink-faint);font-style:italic}
+
+.hero-date{margin-top:24px;display:inline-flex;flex-direction:column;gap:6px;align-items:center;
+  padding:14px 24px;border-top:1px solid var(--gold);border-bottom:1px solid var(--gold)}
+.hero-date .big{font-family:var(--display);font-size:21px;letter-spacing:.05em}
+.hero-date .small{font-family:var(--label);font-size:9.5px;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--ink-faint)}
+.scroll-cue{margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:var(--ink-faint);font-family:var(--label);font-size:9px;letter-spacing:.3em;text-transform:uppercase}
+.scroll-cue .stem{width:1px;height:34px;background:linear-gradient(var(--gold),transparent);
+  animation:drip 2.4s ease-in-out infinite}
+@keyframes drip{0%,100%{opacity:.25;transform:scaleY(.5);transform-origin:top}
+  50%{opacity:1;transform:scaleY(1);transform-origin:top}}
+
+/* ─────────────────────────  SECTIONS  ───────────────────────── */
+section{position:relative;padding:18px 0}
+.sec-head{text-align:center;margin:0 auto 26px;max-width:300px}
+.sec-head h2{font-size:31px;margin-top:9px;color:var(--ink)}
+.sec-head .sub{margin-top:9px;color:var(--ink-soft);font-size:14.5px;line-height:1.6}
+
+.count{display:flex;gap:8px;justify-content:center}
+.count .u{flex:1;max-width:88px;padding:14px 4px 11px;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:2px 2px 40% 40%/2px 2px 14px 14px}
+.count .v{font-family:var(--display);font-size:27px;line-height:1;color:var(--rose-deep);
+  font-variant-numeric:tabular-nums}
+.count .k{font-family:var(--label);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-faint);margin-top:7px}
+
+/* couple portraits */
+.portraits{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:end}
+.portrait{text-align:center}
+.portrait .frame{width:100%;aspect-ratio:3/4;border:1px solid var(--gold);
+  background:linear-gradient(165deg,var(--surface-2),var(--ground-2));
+  display:grid;place-items:center;overflow:hidden;
+  border-radius:50% 50% 6px 6px / 32% 32% 6px 6px}
+.portrait .frame svg{width:52%;height:auto;color:var(--rose);opacity:.65}
+.portrait .nm{margin-top:12px;font-family:var(--display);font-size:20px}
+.portrait .rl{font-family:var(--label);font-size:9px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--ink-faint);margin-top:4px}
+.knot{display:grid;place-items:center;color:var(--gold);padding-bottom:20px}
+
+/* programme — dotted leaders inside the arch */
+.prog{display:grid;text-align:left;margin-top:2px}
+.row{display:flex;align-items:baseline;gap:8px;padding:13px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row .ttl{font-family:var(--display);font-size:19px;color:var(--rose-deep);white-space:nowrap}
+.row .ttl small{display:block;font-family:var(--dev);font-size:10.5px;color:var(--ink-faint);margin-top:1px}
+.row .dots{flex:1;min-width:12px;border-bottom:1.6px dotted var(--gold);transform:translateY(-5px)}
+.row .tm{font-family:var(--display);font-size:13px;color:var(--ink-faint);
+  white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.row .tm b{display:block;font-weight:400;font-size:15.5px;color:var(--ink)}
+.prog-note{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);
+  font-size:12.5px;color:var(--ink-faint);font-style:italic;text-align:center}
+
+/* venue */
+.venue{text-align:center;background:var(--surface);border:1px solid var(--line);padding:26px 20px}
+.venue .vn{font-family:var(--display);font-size:24px}
+.venue .va{margin-top:10px;color:var(--ink-soft);font-size:14.5px}
+.btn{display:inline-block;margin-top:18px;padding:13px 26px;
+  font-family:var(--label);font-size:10px;letter-spacing:.26em;text-transform:uppercase;font-weight:600;
+  color:var(--ground);background:var(--rose-deep);text-decoration:none;border:0;cursor:pointer;
+  transition:transform .25s cubic-bezier(.2,.9,.3,1),box-shadow .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 22px var(--glow)}
+.btn:active{transform:translateY(0)}
+
+/* R.S.V.P. / invitation / compliments */
+.contacts{display:grid;gap:18px}
+.blk{position:relative;padding:22px 16px;background:var(--surface-2);border:1px solid var(--line)}
+.blk::before,.blk::after{content:"";position:absolute;width:13px;height:13px;border:1px solid var(--gold)}
+.blk::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.blk::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+.blk h3{font-size:18px;color:var(--rose-deep);letter-spacing:.05em;
+  display:inline-block;padding-bottom:4px;border-bottom:1px solid var(--gold)}
+.blk ul{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:9px}
+.blk li{font-family:var(--display);font-size:17px;color:var(--ink);line-height:1.35}
+.blk li span{display:block;font-family:var(--label);font-size:9px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--ink-faint);margin-top:3px}
+.blk a{color:var(--rose);text-decoration:none;font-variant-numeric:tabular-nums;
+  border-bottom:1px solid transparent;transition:border-color .2s}
+.blk a:hover{border-bottom-color:var(--rose)}
+.blk .lead{margin-top:13px;font-size:12.5px;color:var(--ink-faint);font-style:italic}
+
+/* footer */
+footer{text-align:center;padding:20px 22px 60px}
+.diya{display:grid;place-items:center;margin:26px 0 6px}
+.flame{transform-origin:50% 100%;animation:flick 1.9s ease-in-out infinite}
+@keyframes flick{0%,100%{transform:scale(1) rotate(-1.5deg);opacity:.95}
+  40%{transform:scale(1.11,.94) rotate(2deg);opacity:1}
+  70%{transform:scale(.95,1.06) rotate(-1deg);opacity:.88}}
+.shloka{font-family:var(--dev);font-size:15px;line-height:1.85;color:var(--ink-soft)}
+.shloka .tr{display:block;margin-top:12px;font-family:var(--label);font-size:10px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);line-height:2}
+.sig{margin-top:30px;font-family:var(--label);font-size:9.5px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--ink-faint)}
+
+.theme-btn{position:fixed;top:12px;right:12px;z-index:70;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line);background:var(--surface);color:var(--rose-deep);
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 3px 12px var(--shadow)}
+.theme-btn svg{width:17px;height:17px}
+
+/* ─────────────────────────  SCROLL-DRIVEN FX  ───────────────────────── */
+/* marigold thread across the top, bead rides the scroll position */
+.thread{position:fixed;top:0;left:0;right:0;height:2px;z-index:65;pointer-events:none}
+.thread .fill{position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);
+  background:linear-gradient(90deg,var(--rose),var(--gold-bright),var(--rose))}
+.thread .bead{position:absolute;top:50%;left:0;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;
+  border-radius:50%;background:var(--gold-bright);
+  box-shadow:0 0 0 2.5px var(--rose),0 0 12px var(--glow)}
+
+/* parallax hosts */
+.torana{will-change:transform}
+.pillars .rail{will-change:transform}
+
+/* mandala that turns behind every section heading */
+.sec-head{position:relative}
+.sec-head > *{position:relative;z-index:1}
+.mandala{position:absolute;left:50%;top:52%;width:250px;height:250px;z-index:0;
+  color:var(--gold);opacity:.17;pointer-events:none;will-change:transform}
+
+/* the two names build letter by letter, then part as you scroll away */
+.names .n{will-change:transform}
+.names .ltr{display:inline-block;opacity:0;transform:translateY(30px) rotate(7deg);
+  transition:opacity .7s ease,transform .85s cubic-bezier(.2,.9,.3,1)}
+.on .names .ltr{opacity:1;transform:none}
+.arch-inner{will-change:transform,opacity}
+
+/* countdown digits roll over when they change */
+.count .u{overflow:hidden}
+.count .v.roll{animation:roll .5s cubic-bezier(.2,.9,.3,1)}
+@keyframes roll{0%{transform:translateY(-70%);opacity:0}60%{opacity:1}100%{transform:none}}
+
+/* footer rangoli draws itself in */
+.rangoli{display:block;margin:0 auto 4px;width:150px;height:150px;color:var(--gold);overflow:visible}
+.rangoli path,.rangoli circle{fill:none;stroke:currentColor;stroke-width:1;
+  vector-effect:non-scaling-stroke}
+.rangoli .petal{stroke:var(--rose)}
+
+/* touch feedback */
+.blk,.count .u,.portrait .frame,.venue{transition:transform .3s cubic-bezier(.2,.9,.3,1)}
+.blk:active,.count .u:active,.portrait .frame:active,.venue:active{transform:scale(.985)}
+
+@media (prefers-reduced-motion: reduce){
+  .thread,.mandala{display:none}
+  .names .ltr{opacity:1;transform:none}
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:.001ms !important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+
+<canvas id="petals" aria-hidden="true"></canvas>
+
+<div class="thread" aria-hidden="true"><span class="fill" id="thFill"></span><span class="bead" id="thBead"></span></div>
+
+<div class="pillars" aria-hidden="true">
+  <div class="rail l"><svg viewBox="0 0 34 100" preserveAspectRatio="none"><defs><linearGradient id="pg" x1="0" x2="1"><stop offset="0" stop-color="var(--gold)" stop-opacity=".1"/><stop offset=".5" stop-color="var(--gold)" stop-opacity=".7"/><stop offset="1" stop-color="var(--gold)" stop-opacity=".1"/></linearGradient></defs><rect x="9" y="0" width="16" height="100" fill="url(#pg)" opacity=".3"/><line x1="13" y1="0" x2="13" y2="100" stroke="var(--gold)" stroke-width=".4"/><line x1="17" y1="0" x2="17" y2="100" stroke="var(--gold)" stroke-width=".4"/><line x1="21" y1="0" x2="21" y2="100" stroke="var(--gold)" stroke-width=".4"/></svg></div>
+  <div class="rail r"><svg viewBox="0 0 34 100" preserveAspectRatio="none"><rect x="9" y="0" width="16" height="100" fill="url(#pg)" opacity=".3"/><line x1="13" y1="0" x2="13" y2="100" stroke="var(--gold)" stroke-width=".4"/><line x1="17" y1="0" x2="17" y2="100" stroke="var(--gold)" stroke-width=".4"/><line x1="21" y1="0" x2="21" y2="100" stroke="var(--gold)" stroke-width=".4"/></svg></div>
+</div>
+
+<button class="theme-btn" id="themeBtn" aria-label="Switch between day and night">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+</button>
+
+<div class="wrap">
+
+  <svg class="torana" id="torana" viewBox="0 0 420 70" aria-hidden="true"></svg>
+
+  <!-- ══════════ HERO ══════════ -->
+  <section class="hero arch-frame" data-arch>
+    <div class="arch-inner">
+
+      <div class="invoke rv d1">
+        <svg class="gan" viewBox="0 0 64 64" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 17c3-6 7-8 10-8s7 2 10 8"/>
+          <path d="M32 4.5 34.4 9h-4.8z" fill="currentColor" stroke="none"/>
+          <ellipse cx="32" cy="24" rx="11.5" ry="9.5"/>
+          <path d="M20.5 19c-6-1.5-9.5 1.5-9.5 6.5s3.5 8 8 7.5c2.5-.3 3.5-2 3.5-4"/>
+          <path d="M43.5 19c6-1.5 9.5 1.5 9.5 6.5s-3.5 8-8 7.5c-2.5-.3-3.5-2-3.5-4"/>
+          <path d="M32 29c0 7-1.5 10-5 12.5-3 2-6 .5-5.5-2.5.4-2.3 2.5-3 4-2"/>
+          <path d="M26 30.5c-1.5 1-2 2.5-1.5 4M38 30.5c1.5 1 2 2.5 1.5 4"/>
+          <path d="M21.5 41c6.5-3 14.5-3 21 0 5 6 2 15-10.5 17.5C19.5 56 16.5 47 21.5 41z"/>
+          <circle cx="27" cy="23" r="1.1" fill="currentColor" stroke="none"/>
+          <circle cx="37" cy="23" r="1.1" fill="currentColor" stroke="none"/>
+        </svg>
+
+        <p class="shlok">
+          <span class="top">।। श्री गणेशाय नमः ।।</span>
+          विघ्न हरण मंगल करण, श्री गणपति महाराज ।।<br>
+          प्रथम निमंत्रण आपको, सिद्ध करो सब काज ।।
+        </p>
+
+        <svg class="gan flip" viewBox="0 0 64 64" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 17c3-6 7-8 10-8s7 2 10 8"/>
+          <path d="M32 4.5 34.4 9h-4.8z" fill="currentColor" stroke="none"/>
+          <ellipse cx="32" cy="24" rx="11.5" ry="9.5"/>
+          <path d="M20.5 19c-6-1.5-9.5 1.5-9.5 6.5s3.5 8 8 7.5c2.5-.3 3.5-2 3.5-4"/>
+          <path d="M43.5 19c6-1.5 9.5 1.5 9.5 6.5s-3.5 8-8 7.5c-2.5-.3-3.5-2-3.5-4"/>
+          <path d="M32 29c0 7-1.5 10-5 12.5-3 2-6 .5-5.5-2.5.4-2.3 2.5-3 4-2"/>
+          <path d="M26 30.5c-1.5 1-2 2.5-1.5 4M38 30.5c1.5 1 2 2.5 1.5 4"/>
+          <path d="M21.5 41c6.5-3 14.5-3 21 0 5 6 2 15-10.5 17.5C19.5 56 16.5 47 21.5 41z"/>
+          <circle cx="27" cy="23" r="1.1" fill="currentColor" stroke="none"/>
+          <circle cx="37" cy="23" r="1.1" fill="currentColor" stroke="none"/>
+        </svg>
+      </div>
+
+      <p class="bless rv d2">
+        “With the blessings of<br>
+        Late Shri Kishore Kumar Varshney”
+      </p>
+
+      <p class="parents rv d3">Shri Gunjan Varshney &amp; Smt. Geeta Varshney</p>
+
+      <p class="solicit rv d4">
+        take extreme pleasure and honour to solicit your distinguished presence
+        on the auspicious occasion of the marriage ceremony of their beloved son
+      </p>
+
+      <h1 class="names">
+        <span class="n" data-split>Madhav</span>
+        <span class="weds rv d5">weds</span>
+        <span class="n" data-split>Renu</span>
+      </h1>
+
+      <p class="sibling rv d6">( D/o Shri Rakesh Varshney &amp; Smt. Sunita Varshney )</p>
+
+      <div class="hero-date rv d7">
+        <span class="big">Wednesday, 16<sup>th</sup> December 2026</span>
+        <span class="small">Hathras</span>
+      </div>
+
+      <div class="scroll-cue rv d8">
+        <span class="stem"></span>
+        <span>Scroll</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider" aria-hidden="true">
+    <span class="rule"></span>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2.6 3 4 5.6 4 8a4 4 0 0 1-8 0c0-2.4 1.4-5 4-8zm-9.5 9.5c3 0 5.4.8 7.1 2.3-1.7 1.5-4.1 2.3-7.1 2.3-.6 0-1.2 0-1.8-.1.6-1.5.6-3 0-4.4.6-.1 1.2-.1 1.8-.1zm19 0c.6 0 1.2 0 1.8.1-.6 1.4-.6 2.9 0 4.4-.6.1-1.2.1-1.8.1-3 0-5.4-.8-7.1-2.3 1.7-1.5 4.1-2.3 7.1-2.3zM12 15.6a4 4 0 0 1 4 4c0 .9-.5 1.6-4 4.4-3.5-2.8-4-3.5-4-4.4a4 4 0 0 1 4-4z"/></svg>
+    <span class="rule"></span>
+  </div>
+
+  <!-- ══════════ COUNTDOWN ══════════ -->
+  <section>
+    <div class="sec-head">
+      <p class="label rv">The wait</p>
+      <h2 class="rv d1">Counting every sunrise</h2>
+    </div>
+    <div class="count rv d2" role="timer" aria-live="polite">
+      <div class="u"><div class="v" id="cd">—</div><div class="k">Days</div></div>
+      <div class="u"><div class="v" id="ch">—</div><div class="k">Hours</div></div>
+      <div class="u"><div class="v" id="cm">—</div><div class="k">Mins</div></div>
+      <div class="u"><div class="v" id="cs">—</div><div class="k">Secs</div></div>
+    </div>
+  </section>
+
+  <!-- ══════════ COUPLE ══════════ -->
+  <section>
+    <div class="sec-head">
+      <p class="label rv">The two of us</p>
+      <h2 class="rv d1">Madhav &amp; Renu</h2>
+      <p class="sub rv d2">Two families, one long-awaited December.
+        We are asking you to be there as we take the seven steps together.</p>
+    </div>
+    <div class="portraits rv d3">
+      <div class="portrait">
+        <div class="frame">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+            <path d="M20 3c-5 0-8 3-8 7 0 2 .5 3.5 1 4.5-1 .8-1.5 2-1.5 3.2 0 1.6 1 2.8 2 3.2C14 24 16.5 26 20 26s6-2 6.5-5.1c1-.4 2-1.6 2-3.2 0-1.2-.5-2.4-1.5-3.2.5-1 1-2.5 1-4.5 0-4-3-7-8-7z"/>
+            <path d="M8 38c1.5-6.5 6-9.5 12-9.5S30.5 31.5 32 38"/>
+            <path d="M20 3v-2M16 30l4 4 4-4"/>
+          </svg>
+        </div>
+        <p class="nm">Madhav</p>
+        <p class="rl">The groom</p>
+      </div>
+      <div class="portrait">
+        <div class="frame">
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+            <path d="M20 4c-5 0-8.5 3.2-8.5 8 0 1.8.4 3.2.9 4.2-.9.8-1.4 1.9-1.4 3 0 1.6 1 2.8 2 3.2.6 3 3.1 5 7 5s6.4-2 7-5c1-.4 2-1.6 2-3.2 0-1.1-.5-2.2-1.4-3 .5-1 .9-2.4.9-4.2 0-4.8-3.5-8-8.5-8z"/>
+            <path d="M11.5 12c3-1.5 5.5-4 5.5-4s3 3.5 11.5 4"/>
+            <path d="M7 38c1.5-6.5 6-9.5 13-9.5S31.5 31.5 33 38"/>
+            <circle cx="20" cy="8.5" r="1.1" fill="currentColor" stroke="none"/>
+            <path d="M14 21h12"/>
+          </svg>
+        </div>
+        <p class="nm">Renu</p>
+        <p class="rl">The bride</p>
+      </div>
+    </div>
+    <div class="knot rv d4" aria-hidden="true">
+      <svg width="66" height="30" viewBox="0 0 66 30" fill="none" stroke="currentColor" stroke-width="1.1">
+        <path d="M2 15h16M48 15h16"/>
+        <path d="M18 15c0-6 4-10 8-10s7 4 7 10-3 10-7 10-8-4-8-10z"/>
+        <path d="M48 15c0-6-4-10-8-10s-7 4-7 10 3 10 7 10 8-4 8-10z"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ══════════ PROGRAMME ══════════ -->
+  <section class="arch-frame" data-arch>
+    <div class="arch-inner">
+      <div class="sec-head">
+        <p class="label rv">Three days of celebration</p>
+        <h2 class="rv d1">Programme</h2>
+      </div>
+
+      <div class="prog">
+        <div class="row rv d2">
+          <span class="ttl">Haldi <small>हल्दी</small></span>
+          <span class="dots"></span>
+          <span class="tm">Tue, 15<sup>th</sup> Dec<b>10:30 AM</b></span>
+        </div>
+        <div class="row rv d3">
+          <span class="ttl">Mehndi <small>मेहँदी</small></span>
+          <span class="dots"></span>
+          <span class="tm">Tue, 15<sup>th</sup> Dec<b>4:00 PM</b></span>
+        </div>
+        <div class="row rv d4">
+          <span class="ttl">Sangeet <small>संगीत</small></span>
+          <span class="dots"></span>
+          <span class="tm">Tue, 15<sup>th</sup> Dec<b>7:30 PM</b></span>
+        </div>
+        <div class="row rv d5">
+          <span class="ttl">Baraat Prasthan <small>बारात प्रस्थान</small></span>
+          <span class="dots"></span>
+          <span class="tm">Wed, 16<sup>th</sup> Dec<b>5:00 PM</b></span>
+        </div>
+        <div class="row rv d6">
+          <span class="ttl">Vivah &middot; Pheras <small>विवाह</small></span>
+          <span class="dots"></span>
+          <span class="tm">Wed, 16<sup>th</sup> Dec<b>8:45 PM</b></span>
+        </div>
+        <div class="row rv d7">
+          <span class="ttl">Reception <small>स्वागत</small></span>
+          <span class="dots"></span>
+          <span class="tm">Thu, 17<sup>th</sup> Dec<b>7:00 PM</b></span>
+        </div>
+      </div>
+
+      <p class="prog-note rv d8">
+        Shubh muhurat for the pheras: 8:45 PM – 10:20 PM. Dinner follows.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════ VENUE ══════════ -->
+  <section>
+    <div class="sec-head">
+      <p class="label rv">Finding us</p>
+      <h2 class="rv d1">The venue</h2>
+    </div>
+    <div class="venue rv d2">
+      <p class="vn">Sobhagya Farm House</p>
+      <p class="va">Agra Road, Hathras<br>Uttar Pradesh 204101</p>
+      <a class="btn" href="https://maps.google.com/?q=Sobhagya+Farm+House+Agra+Road+Hathras+Uttar+Pradesh+204101"
+         target="_blank" rel="noopener">Open in Maps</a>
+      <p class="va" style="margin-top:20px;font-size:13px">
+        Haldi, Mehndi &amp; Sangeet are at the Varshney residence, Hathras.
+        The baraat departs from there on the 16<sup>th</sup> at 5:00 PM.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════ R.S.V.P. ══════════ -->
+  <section class="arch-frame" data-arch>
+    <div class="arch-inner">
+      <div class="sec-head">
+        <p class="label rv">With folded hands</p>
+        <h2 class="rv d1">Our families</h2>
+      </div>
+
+      <div class="contacts" style="text-align:left">
+        <div class="blk rv d2">
+          <h3>R.S.V.P.</h3>
+          <ul>
+            <li>Varshney Family, Hathras<span>Groom's side</span></li>
+            <li>Varshney Family<span>Bride's side</span></li>
+            <li>Nanke &amp; Dadke<span>Mama &amp; Dada ji</span></li>
+          </ul>
+        </div>
+
+        <div class="blk rv d3">
+          <h3>Special Invitation From</h3>
+          <ul>
+            <li>Shri Mohan &amp; Smt. Kusum Varshney</li>
+            <li>Shri Sanjay &amp; Smt. Rekha Varshney</li>
+            <li>Aarav, Diya &amp; Kartik Varshney</li>
+          </ul>
+        </div>
+
+        <div class="blk rv d4">
+          <h3>Compliments From</h3>
+          <ul>
+            <li>Shri Gunjan Varshney
+              <span><a href="tel:+919999999999">+91 99999 99999</a></span></li>
+            <li>Smt. Geeta Varshney
+              <span><a href="tel:+919888888888">+91 98888 88888</a></span></li>
+          </ul>
+          <p class="lead">A call, a message, or simply your presence — all of it reaches us.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer>
+    <svg class="rangoli" id="rangoli" viewBox="0 0 120 120" aria-hidden="true"></svg>
+
+    <div class="diya rv" aria-hidden="true">
+      <svg width="60" height="52" viewBox="0 0 60 52" fill="none">
+        <ellipse class="flame" cx="30" cy="26" rx="5" ry="12" fill="var(--gold-bright)"/>
+        <ellipse class="flame" cx="30" cy="29" rx="2.6" ry="7" fill="var(--rose-deep)" opacity=".55"/>
+        <path d="M8 34c0 7 9.8 12 22 12s22-5 22-12z" fill="var(--rose-deep)"/>
+        <path d="M8 34h44" stroke="var(--gold)" stroke-width="1.2"/>
+        <path d="M14 46c4 3 10 4 16 4s12-1 16-4" stroke="var(--gold)" stroke-width=".8" fill="none"/>
+      </svg>
+    </div>
+
+    <p class="shloka rv d1">
+      समानी व आकूतिः समाना हृदयानि वः
+      <span class="tr">May our hearts be as one, our minds as one</span>
+    </p>
+
+    <div class="divider" aria-hidden="true">
+      <span class="rule"></span>
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"/><path d="M12 1l1.6 5.4L12 9l-1.6-2.6zM12 23l-1.6-5.4L12 15l1.6 2.6zM1 12l5.4-1.6L9 12l-2.6 1.6zM23 12l-5.4 1.6L15 12l2.6-1.6z"/></svg>
+      <span class="rule"></span>
+    </div>
+
+    <p class="sig">Madhav weds Renu &nbsp;·&nbsp; 16 December 2026</p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const NS = "http://www.w3.org/2000/svg";
+const svgEl = (n, a) => { const e = document.createElementNS(NS, n);
+  for (const k in a) e.setAttribute(k, a[k]); return e; };
+const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
+
+/* One rAF loop drives every per-frame effect — cheaper than several on mobile.
+   The next frame is queued before the tasks run, and each task is isolated, so
+   one bad frame can never kill the petals for the rest of the visit. */
+const RAF = [];
+(function loop(){
+  requestAnimationFrame(loop);
+  for (let i = 0; i < RAF.length; i++){
+    try { RAF[i](); } catch (e){ /* keep the other effects alive */ }
+  }
+})();
+
+/* ═══════════════  CUSPED MUGHAL ARCH GEOMETRY  ═══════════════
+   Two-centre pointed arch: left half is an arc centred at (+S,0) radius 2S,
+   right half centred at (−S,0). Scalloped lobes are semicircles hung between
+   evenly-spaced points on that curve, bulging into the opening.            */
+function archPath(w, h, cusps, rise){
+  const S = w / 2;
+  const apex = Math.sqrt(3) * S;
+  const archH = Math.min(rise, h);
+  const ky = archH / apex;
+  const pt = u => {
+    let a, cx;
+    if (u <= .5){ a = Math.PI - (u / .5) * (Math.PI / 3); cx =  S; }
+    else        { a = (Math.PI / 3) * (1 - (u - .5) / .5); cx = -S; }
+    return [ S + cx + 2 * S * Math.cos(a), archH - 2 * S * Math.sin(a) * ky ];
+  };
+  let d = `M 0 ${h} L 0 ${archH}`, prev = pt(0);
+  for (let i = 1; i <= cusps; i++){
+    const p = pt(i / cusps);
+    const r = Math.hypot(p[0] - prev[0], p[1] - prev[1]) / 2;
+    d += ` A ${r.toFixed(2)} ${r.toFixed(2)} 0 0 0 ${p[0].toFixed(2)} ${p[1].toFixed(2)}`;
+    prev = p;
+  }
+  return d + ` L ${w} ${h} Z`;
+}
+
+function buildArch(host){
+  const w = host.clientWidth, h = host.clientHeight;
+  if (!w || !h) return;
+  let svg = host.querySelector("svg.arch");
+  if (!svg){
+    svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("class", "arch");
+    svg.setAttribute("aria-hidden", "true");
+    svg.appendChild(document.createElementNS(NS, "path")).setAttribute("class", "outline drawn");
+    svg.appendChild(document.createElementNS(NS, "path")).setAttribute("class", "inline-trace drawn");
+    host.prepend(svg);
+  }
+  svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  const outer = svg.querySelector(".outline"), inner = svg.querySelector(".inline-trace");
+  const rise = Math.min(w * .52, h * .6), pad = 9;
+  outer.setAttribute("d", archPath(w, h, 12, rise));
+  inner.setAttribute("d", archPath(w - pad * 2, h - pad, 12, rise - pad * 1.4));
+  inner.setAttribute("transform", `translate(${pad},${pad})`);
+  [outer, inner].forEach(p => p.style.setProperty("--len", p.getTotalLength()));
+}
+const archHosts = [...document.querySelectorAll("[data-arch]")];
+const drawArches = () => archHosts.forEach(buildArch);
+drawArches();
+addEventListener("load", drawArches);
+addEventListener("resize", () => { clearTimeout(window._rz); window._rz = setTimeout(drawArches, 180); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawArches);
+
+/* ═══════════════  MANDALAS behind section headings  ═══════════════ */
+document.querySelectorAll(".sec-head").forEach(head => {
+  if (REDUCED) return;
+  const svg = svgEl("svg", { class: "mandala", viewBox: "0 0 100 100", "aria-hidden": "true" });
+  const g = svgEl("g", { fill: "none", stroke: "currentColor", "stroke-width": ".7" });
+  [46, 34, 22].forEach((r, ri) => {
+    g.appendChild(svgEl("circle", { cx: 50, cy: 50, r }));
+    const n = [24, 16, 12][ri];
+    for (let i = 0; i < n; i++){
+      const a = (i / n) * Math.PI * 2 + ri * .3;
+      const c = Math.cos(a), s = Math.sin(a), len = [7, 9, 7][ri];
+      g.appendChild(svgEl("line", {
+        x1: (50 + c * r).toFixed(2), y1: (50 + s * r).toFixed(2),
+        x2: (50 + c * (r - len)).toFixed(2), y2: (50 + s * (r - len)).toFixed(2),
+      }));
+    }
+  });
+  /* eight lotus petals in the middle */
+  for (let i = 0; i < 8; i++){
+    const a = (i / 8) * 360;
+    g.appendChild(svgEl("path", {
+      d: "M50 50 C 44 40, 44 30, 50 22 C 56 30, 56 40, 50 50 Z",
+      transform: `rotate(${a} 50 50)`, stroke: "var(--rose)", "stroke-width": ".6",
+    }));
+  }
+  svg.appendChild(g);
+  head.prepend(svg);
+});
+
+/* ═══════════════  FOOTER RANGOLI — draws itself on approach  ═══════════════ */
+(function rangoli(){
+  const svg = document.getElementById("rangoli");
+  const g = svgEl("g", {});
+  [52, 40, 15].forEach(r => g.appendChild(svgEl("circle", { cx: 60, cy: 60, r })));
+  for (let i = 0; i < 12; i++){
+    const a = (i / 12) * 360;
+    g.appendChild(svgEl("path", {
+      class: "petal", transform: `rotate(${a} 60 60)`,
+      d: "M60 45 C 51 34, 51 20, 60 8 C 69 20, 69 34, 60 45 Z",
+    }));
+  }
+  for (let i = 0; i < 24; i++){
+    const a = (i / 24) * Math.PI * 2, c = Math.cos(a), s = Math.sin(a);
+    g.appendChild(svgEl("line", { x1: 60 + c * 40, y1: 60 + s * 40,
+      x2: 60 + c * 52, y2: 60 + s * 52, stroke: "currentColor", "stroke-width": ".8" }));
+  }
+  svg.appendChild(g);
+  svg.querySelectorAll("*").forEach(p => {
+    const len = p.getTotalLength ? p.getTotalLength() : 0;
+    if (!len) return;
+    p.dataset.len = len;
+    p.style.strokeDasharray = len;
+    p.style.strokeDashoffset = REDUCED ? 0 : len;
+  });
+})();
+
+/* ═══════════════  SPLIT THE TWO NAMES INTO LETTERS  ═══════════════ */
+document.querySelectorAll("[data-split]").forEach(node => {
+  const txt = node.textContent;
+  node.textContent = "";
+  [...txt].forEach((ch, i) => {
+    const s = document.createElement("span");
+    s.className = "ltr";
+    s.textContent = ch;
+    s.style.transitionDelay = (.45 + i * .055).toFixed(3) + "s";
+    node.appendChild(s);
+  });
+});
+
+/* ═══════════════  TORANA — hanging marigold string  ═══════════════ */
+(function torana(){
+  const svg = document.getElementById("torana");
+  const W = 420, sag = 26, strands = 15;
+  const curve = x => 4 + sag * Math.sin(Math.PI * x / W);
+  let d = "M 0 4";
+  for (let x = 0; x <= W; x += 8) d += ` L ${x} ${curve(x).toFixed(1)}`;
+  const el = (n, a) => { const e = document.createElementNS(NS, n);
+    for (const k in a) e.setAttribute(k, a[k]); return e; };
+  svg.appendChild(el("path", { d, fill: "none", stroke: "var(--gold)", "stroke-width": 1 }));
+
+  for (let i = 0; i < strands; i++){
+    const x = (i + .5) * (W / strands), y = curve(x);
+    const len = 12 + (i % 4) * 7 + (i % 3) * 5;
+    const g = el("g", { class: "strand", style: `transform-origin:${x}px ${y}px` });
+    g.appendChild(el("line", { x1: x, y1: y, x2: x, y2: y + len,
+      stroke: "var(--gold)", "stroke-width": .6 }));
+    for (let j = 0; j * 8 < len; j++)
+      g.appendChild(el("circle", { cx: x, cy: y + 7 + j * 8, r: 3.4,
+        fill: j % 2 ? "var(--gold-bright)" : "var(--rose)", opacity: .9 }));
+    g.appendChild(el("ellipse", { cx: x, cy: y + len + 4, rx: 2.6, ry: 5,
+      fill: "var(--rose-deep)", opacity: .7 }));
+    svg.appendChild(g);
+  }
+})();
+
+/* ═══════════════  PETAL FIELD  ═══════════════
+   Ambient drift; density rises with scroll velocity; taps burst petals out. */
+(function petals(){
+  const cv = document.getElementById("petals"), ctx = cv.getContext("2d");
+  let W = 0, H = 0;
+  const KEYS = ["--petal-a", "--petal-b", "--petal-c", "--petal-d"];
+  const read = () => KEYS.map(v => getComputedStyle(document.documentElement).getPropertyValue(v).trim());
+  let palette = read();
+  const P = [], rings = [];
+  const MAX = REDUCED ? 0 : (innerWidth < 520 ? 46 : 70);
+  const rr = (a, b) => a + Math.random() * (b - a);
+
+  function resize(){
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + "px"; cv.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize(); addEventListener("resize", resize);
+
+  const make = o => Object.assign({
+    x: rr(-20, W + 20), y: rr(-H * .3, -10),
+    s: rr(5, 12), vy: rr(.35, 1.15), vx: rr(-.35, .35),
+    a: rr(0, 6.28), va: rr(-.028, .028), sw: rr(.006, .018), ph: rr(0, 6.28),
+    c: palette[(Math.random() * palette.length) | 0], op: rr(.45, .95), life: 1, decay: 0,
+  }, o);
+  for (let i = 0; i < MAX * .7; i++) P.push(make({ y: rr(-H, H) }));
+
+  function draw(p){
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a);
+    ctx.globalAlpha = p.op * p.life; ctx.fillStyle = p.c;
+    const s = p.s, sq = Math.abs(Math.cos(p.a * .8)) * .55 + .45;
+    ctx.beginPath(); ctx.moveTo(0, -s);
+    ctx.bezierCurveTo(s * .95 * sq, -s * .55, s * .78 * sq, s * .55, 0, s);
+    ctx.bezierCurveTo(-s * .78 * sq, s * .55, -s * .95 * sq, -s * .55, 0, -s);
+    ctx.fill(); ctx.restore();
+  }
+
+  /* gust = how hard you're scrolling; wind = which way (signed) */
+  let lastY = scrollY, gust = 0, wind = 0;
+  addEventListener("scroll", () => {
+    const d = scrollY - lastY;
+    gust = Math.min(gust + Math.abs(d) * .05, 14);
+    wind = Math.max(-3.4, Math.min(3.4, wind + d * .014));
+    lastY = scrollY;
+  }, { passive: true });
+
+  addEventListener("pointerdown", e => {
+    if (REDUCED) return;
+    for (let i = 0; i < 16; i++){
+      const ang = (6.28 * i) / 16 + rr(-.2, .2), sp = rr(2.2, 6.5);
+      P.push(make({ x: e.clientX, y: e.clientY, vx: Math.cos(ang) * sp,
+        vy: Math.sin(ang) * sp - 1.2, s: rr(4, 9), decay: rr(.008, .016) }));
+    }
+    rings.push({ x: e.clientX, y: e.clientY, r: 4, o: .55 });
+  }, { passive: true });
+
+  let t = 0;
+  function frame(){
+    t += .016; ctx.clearRect(0, 0, W, H);
+    if (gust > .05 && P.length < MAX * 2.4 && Math.random() < gust * .09)
+      P.push(make({ y: wind < 0 ? H + 12 : -12, vy: rr(.9, 2.4) }));
+    gust *= .93; wind *= .94;
+
+    for (let i = P.length - 1; i >= 0; i--){
+      const p = P[i];
+      p.a += p.va + wind * .012;
+      p.x += p.vx + Math.sin(t * p.sw * 60 + p.ph) * .5 + wind * .18;
+      p.y += p.vy + wind * .95;
+      if (p.decay){ p.vx *= .965; p.vy = p.vy * .965 + .09; p.life -= p.decay; }
+      if (p.life <= 0 || p.y > H + 30 || p.y < -H * .5 || p.x < -60 || p.x > W + 60){
+        if (p.decay) P.splice(i, 1); else Object.assign(p, make({ y: rr(-60, -12) }));
+        continue;
+      }
+      draw(p);
+    }
+    for (let i = rings.length - 1; i >= 0; i--){
+      const g = rings[i];
+      g.r += 2.6; g.o -= .022;
+      if (g.o <= 0){ rings.splice(i, 1); continue; }
+      ctx.beginPath(); ctx.globalAlpha = g.o; ctx.strokeStyle = palette[2];
+      ctx.lineWidth = 1.1; ctx.arc(g.x, g.y, g.r, 0, 6.28); ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  RAF.push(frame);
+  window.__repalette = () => { palette = read();
+    P.forEach(p => p.c = palette[(Math.random() * palette.length) | 0]); };
+})();
+
+/* ═══════════════  SCROLL ENGINE  ═══════════════
+   Everything below is tied to scroll position rather than to a timer, so the
+   page keeps moving under your thumb — and rewinds when you scroll back up.
+   One smoothed scroll value feeds every effect; writes are transform/opacity
+   (and dash offsets) only, so nothing here triggers layout.                  */
+(function scrollFx(){
+  const archPathsAll = [...document.querySelectorAll(".arch .drawn")];
+  if (REDUCED){ archPathsAll.forEach(p => p.style.strokeDashoffset = 0); return; }
+
+  const hero      = document.querySelector(".hero");
+  const heroInner = hero.querySelector(".arch-inner");
+  const nameEls   = [...hero.querySelectorAll(".names .n")];
+  const torana    = document.getElementById("torana");
+  const rails     = [...document.querySelectorAll(".pillars .rail")];
+  const mandalas  = [...document.querySelectorAll(".mandala")];
+  const rgSvg     = document.getElementById("rangoli");
+  const rgParts   = [...rgSvg.querySelectorAll("*")].filter(p => p.dataset.len);
+  const fill      = document.getElementById("thFill");
+  const bead      = document.getElementById("thBead");
+  /* the hero arch draws on a timer (it is already in view), the rest on scroll */
+  const archGroups = archHosts.filter(h => !h.classList.contains("hero"))
+    .map(h => ({ host: h, paths: [...h.querySelectorAll(".arch .drawn")] }));
+
+  const M = new WeakMap();
+  let vh = 1, docH = 1;
+  const box = e => { const r = e.getBoundingClientRect();
+    return { top: r.top + scrollY, h: r.height }; };
+
+  function measure(){
+    vh = innerHeight;
+    docH = Math.max(1, document.documentElement.scrollHeight - vh);
+    [hero, rgSvg, ...mandalas, ...archHosts].forEach(e => e && M.set(e, box(e)));
+  }
+  measure();
+  addEventListener("load", measure);
+  addEventListener("resize", () => { clearTimeout(window._mz); window._mz = setTimeout(measure, 200); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+  setTimeout(measure, 1500);
+
+  /* progress of an element through the viewport: 0 just before it enters */
+  const entry = (b, span) => clamp01((scrollYSmooth + vh - b.top) / (vh * span));
+
+  let scrollYSmooth = scrollY, targetY = scrollY, lastT = performance.now();
+  addEventListener("scroll", () => { targetY = scrollY; }, { passive: true });
+
+  RAF.push(function tick(){
+    /* time-based easing, so a 120Hz phone and a 60Hz one settle at the same rate */
+    const now = performance.now();
+    const dt = Math.min(64, now - lastT) / 16.667;
+    lastT = now;
+    scrollYSmooth += (targetY - scrollYSmooth) * (1 - Math.pow(1 - .13, dt));
+    if (Math.abs(targetY - scrollYSmooth) < .06) scrollYSmooth = targetY;
+    const sy = scrollYSmooth;
+
+    /* 1 — marigold thread across the top */
+    const gp = clamp01(sy / docH);
+    fill.style.transform = `scaleX(${gp.toFixed(4)})`;
+    bead.style.transform = `translateX(${(gp * innerWidth).toFixed(1)}px)`;
+
+    /* 2 — parallax: torana lifts away faster than the page, pillars lag behind */
+    torana.style.transform = `translateY(${(-sy * .3).toFixed(1)}px)`;
+    const rd = (sy * .05).toFixed(1);
+    rails[0] && (rails[0].style.transform = `translateY(${-rd}px)`);
+    rails[1] && (rails[1].style.transform = `translateY(${rd}px)`);
+
+    /* 3 — hero recedes and the two names part as you leave */
+    const hb = M.get(hero);
+    if (hb){
+      const hp = clamp01(sy / (hb.h * .85));
+      heroInner.style.transform = `translateY(${(hp * 48).toFixed(1)}px) scale(${(1 - hp * .07).toFixed(4)})`;
+      heroInner.style.opacity = Math.max(0, 1 - hp * 1.08).toFixed(3);
+      if (nameEls[0]) nameEls[0].style.transform = `translateX(${(-hp * 26).toFixed(1)}px)`;
+      if (nameEls[1]) nameEls[1].style.transform = `translateX(${(hp * 26).toFixed(1)}px)`;
+    }
+
+    /* 4 — arches draw themselves in step with the scroll */
+    for (const g of archGroups){
+      const b = M.get(g.host); if (!b) continue;
+      const p = entry(b, .72);
+      for (const path of g.paths){
+        const len = parseFloat(path.style.getPropertyValue("--len")) || 0;
+        path.style.strokeDashoffset = (len * (1 - p)).toFixed(2);
+      }
+    }
+
+    /* 5 — heading mandalas turn, alternating direction */
+    mandalas.forEach((m, i) => {
+      const b = M.get(m); if (!b) return;
+      const rel = clamp01((sy + vh - b.top) / (vh + b.h));
+      const dir = i % 2 ? -1 : 1;
+      m.style.transform =
+        `translate(-50%,-50%) rotate(${((rel * 150 - 45) * dir).toFixed(1)}deg) scale(${(.82 + rel * .32).toFixed(3)})`;
+    });
+
+    /* 6 — the closing rangoli draws petal by petal as you reach the end */
+    const rb = M.get(rgSvg);
+    if (rb){
+      const rp = entry(rb, .55);
+      rgSvg.style.transform = `rotate(${(rp * 40).toFixed(1)}deg)`;
+      for (let i = 0; i < rgParts.length; i++){
+        const part = rgParts[i], len = +part.dataset.len;
+        const stag = clamp01(rp * 1.7 - (i / rgParts.length) * .7);
+        part.style.strokeDashoffset = (len * (1 - stag)).toFixed(2);
+      }
+    }
+  });
+})();
+
+/* ═══════════════  SCROLL REVEAL  ═══════════════ */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); }
+}), { threshold: .12, rootMargin: "0px 0px -8% 0px" });
+document.querySelectorAll("section, footer").forEach(s => io.observe(s));
+requestAnimationFrame(() => document.querySelector(".hero").classList.add("on"));
+
+/* ═══════════════  COUNTDOWN  ═══════════════ */
+(function(){
+  const target = new Date("2026-12-16T17:00:00+05:30").getTime();
+  const n = { d: document.getElementById("cd"), h: document.getElementById("ch"),
+              m: document.getElementById("cm"), s: document.getElementById("cs") };
+  const pad = v => String(v).padStart(2, "0");
+  /* only touch the DOM when a digit actually changes, and roll it over when it does */
+  const set = (node, val) => {
+    val = String(val);
+    if (node.textContent === val) return;
+    node.textContent = val;
+    if (REDUCED) return;
+    node.classList.remove("roll");
+    void node.offsetWidth;
+    node.classList.add("roll");
+  };
+  (function tick(){
+    const gap = target - Date.now();
+    if (gap <= 0){ for (const k in n) set(n[k], "00"); return; }
+    const s = Math.floor(gap / 1000);
+    set(n.d, Math.floor(s / 86400));
+    set(n.h, pad(Math.floor(s / 3600) % 24));
+    set(n.m, pad(Math.floor(s / 60) % 60));
+    set(n.s, pad(s % 60));
+    setTimeout(tick, 1000);
+  })();
+})();
+
+/* ═══════════════  DAY / NIGHT  ═══════════════ */
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.getAttribute("data-theme")
+    ? root.getAttribute("data-theme") === "dark"
+    : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.setAttribute("data-theme", dark ? "light" : "dark");
+  requestAnimationFrame(() => window.__repalette && window.__repalette());
+});
+</script>
